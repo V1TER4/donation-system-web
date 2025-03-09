@@ -13,6 +13,10 @@ function Dashboard() {
         checkAuth();
     }, []);
 
+    if (!user) {
+        return <div>Carregando...</div>; // Caso o usuário não tenha sido carregado
+    }
+
     return (
         <div className="d-flex">
             <div className="sidebar bg-dark text-white p-3 d-flex flex-column" style={{ width: '250px', minHeight: '100vh' }}>

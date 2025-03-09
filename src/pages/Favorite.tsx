@@ -4,12 +4,23 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { FaStar, FaTachometerAlt, FaHandHoldingHeart, FaHistory, FaSignOutAlt } from "react-icons/fa";
 
+// Tipagem dos dados
+type Institution = {
+    id: number;
+    name: string;
+};
+
+type Favorite = {
+    institution_id: number;
+    financial_institution: { name: string };
+};
+
 function Favorites() {
     const { checkAuth } = useAuth();
     const navigate = useNavigate();
-    const [favorite, setFavorite] = useState(null);
-    const [selectedFavorite, setSelectedFavorite] = useState('');
-    const [institutions, setInstitutions] = useState([]);
+    const [favorite, setFavorite] = useState<Favorite | null>(null);
+    const [selectedFavorite, setSelectedFavorite] = useState<string>('');
+    const [institutions, setInstitutions] = useState<Institution[]>([]);
     const [loading, setLoading] = useState(true);
     const { user } = useUser();
 
@@ -25,6 +36,7 @@ function Favorites() {
     }, [user]);
 
     const fetchFavorites = async () => {
+        if (!user) return; // Verifica se o user é null antes de continuar
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}/favorite/${user.id}`, {
                 headers: {
@@ -35,7 +47,7 @@ function Favorites() {
 
             if (data.data) {
                 setFavorite(data.data);
-                setSelectedFavorite(data.data.institution_id);
+                setSelectedFavorite(data.data.institution_id.toString());
             }
         } catch (error) {
             console.error("Erro ao carregar favoritos", error);
@@ -58,7 +70,7 @@ function Favorites() {
         }
     };
 
-    const handleSelectChange = async (event) => {
+    const handleSelectChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selected = event.target.value;
         setSelectedFavorite(selected);
     };
@@ -70,6 +82,8 @@ function Favorites() {
         }
 
         try {
+            if (!user) return; // Verifica se o user é null antes de continuar
+
             const response = await fetch(`${import.meta.env.VITE_API_URL}/favorite`, {
                 method: "POST",
                 headers: {
@@ -87,7 +101,7 @@ function Favorites() {
             }
 
             alert("Favorito criado com sucesso!");
-            fetchFavorites()
+            fetchFavorites();
         } catch (error) {
             console.error("Erro ao criar favorito", error);
         }
@@ -100,6 +114,8 @@ function Favorites() {
         }
 
         try {
+            if (!user) return; // Verifica se o user é null antes de continuar
+
             const response = await fetch(`${import.meta.env.VITE_API_URL}/favorite/${user.id}`, {
                 method: "DELETE",
                 headers: {
@@ -127,7 +143,7 @@ function Favorites() {
     return (
         <div className="d-flex">
             <div className="sidebar bg-dark text-white p-3 d-flex flex-column" style={{ width: '250px', minHeight: '100vh' }}>
-                <h4 className="mb-4">{user.name}</h4>
+                <h4 className="mb-4">{user?.name}</h4>
                 <button className="btn btn-outline-light d-flex align-items-center justify-content-start mb-2" onClick={() => navigate("/dashboard")}>
                     <FaTachometerAlt className="me-2" /> Dashboard
                 </button>

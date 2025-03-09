@@ -4,17 +4,31 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { FaTachometerAlt, FaHandHoldingHeart, FaHistory, FaStar, FaSignOutAlt } from "react-icons/fa";
 
+interface Donation {
+    id: number;
+    user: {
+        name: string;
+    };
+    financial_institution: {
+        name: string;
+    };
+    value: string;
+    created_at: string;
+}
+
 function History() {
     const { checkAuth } = useAuth();
     const navigate = useNavigate();
     const { user } = useUser();
-    const [donations, setDonations] = useState([]);
+    const [donations, setDonations] = useState<Donation[]>([]);
 
     useEffect(() => {
         checkAuth();
     }, []);
 
     useEffect(() => {
+        if (!user) return;
+
         const fetchDonations = async () => {
             try {
                 const response = await fetch(`${import.meta.env.VITE_API_URL}/donation/${user.id}`, {
@@ -37,6 +51,10 @@ function History() {
 
         fetchDonations();
     }, [user]);
+
+    if (!user) {
+        return <div>Carregando...</div>;
+    }
 
     return (
         <div className="d-flex vh-100">

@@ -5,6 +5,12 @@ import { NumericFormat } from "react-number-format";
 import { useNavigate } from "react-router-dom";
 import { FaTachometerAlt, FaHandHoldingHeart, FaHistory, FaStar, FaRegStar, FaSignOutAlt } from "react-icons/fa";
 
+// Definição do tipo para Institution
+type Institution = {
+    id: number;
+    name: string;
+};
+
 const DonationForm: React.FC = () => {
     const { checkAuth } = useAuth();
     useEffect(() => {
@@ -13,14 +19,16 @@ const DonationForm: React.FC = () => {
 
     const { user } = useUser();
     const [amount, setAmount] = useState("");
-    const [institutions, setInstitutions] = useState([]);
-    const [favoriteInstitution, setFavoriteInstitution] = useState(null);
+    const [institutions, setInstitutions] = useState<Institution[]>([]); // Tipo definido para institutions
+    const [favoriteInstitution, setFavoriteInstitution] = useState<Institution | null>(null); // Tipagem correta
     const [selectedInstitution, setSelectedInstitution] = useState("");
     const [useFavorite, setUseFavorite] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchDonationData = async () => {
+            if (!user) return;
+
             try {
                 const response = await fetch(`${import.meta.env.VITE_API_URL}/donation/index/${user.id}`, {
                     headers: {
@@ -64,19 +72,18 @@ const DonationForm: React.FC = () => {
                 }),
             });
 
+            const responseData = await response.json();
+
             if (response.ok) {
-                alert(response.message);
                 window.location.reload();
             } else {
-                const errorData = await response.json();
-                if (errorData.message?.value?.length) {
-                    alert(errorData.message.value[0]);
+                if (responseData.message?.value?.length) {
+                    alert(responseData.message.value[0]);
                 } else {
-                    alert(errorData.message ?? "Ocorreu um erro desconhecido.");
+                    alert(responseData.message ?? "Ocorreu um erro desconhecido.");
                 }
             }
         } catch (error) {
-            alert(error)
             console.error("Erro ao realizar doação:", error);
             alert("Ocorreu um erro. Tente novamente mais tarde.");
         }
@@ -85,7 +92,7 @@ const DonationForm: React.FC = () => {
     return (
         <div className="d-flex vh-100">
             <div className="sidebar bg-dark text-white p-3 d-flex flex-column" style={{ width: '250px' }}>
-                <h4 className="mb-4">{user.name}</h4>
+                <h4 className="mb-4">{user?.name ?? "Usuário"}</h4> {/* Verifica se o user existe */}
                 <button className="btn btn-outline-light d-flex align-items-center justify-content-start mb-2" onClick={() => navigate("/dashboard")}>
                     <FaTachometerAlt className="me-2" /> Dashboard
                 </button>
@@ -152,7 +159,8 @@ const DonationForm: React.FC = () => {
                             value={amount}
                             onValueChange={(values) => setAmount(values.value)}
                             thousandSeparator="."
-                            decimalSeparator="," prefix="R$ "
+                            decimalSeparator=","
+                            prefix="R$ "
                             decimalScale={2}
                             fixedDecimalScale
                             allowNegative={false}
