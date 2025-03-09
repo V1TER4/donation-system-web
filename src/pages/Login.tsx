@@ -35,40 +35,47 @@ function Login({ setIsAuthenticated }: LoginProps) {
 
                 navigate("/dashboard", { state: { email } });
             } else {
-                alert("Login failed. Please check your credentials and try again.");
+                alert("Login falhou. Verifique suas credenciais e tente novamente.");
             }
         } catch (error) {
-            console.error("Error during login:", error);
-            alert("An error occurred. Please try again later.");
+            console.error("Erro durante o login:", error);
+            alert("Ocorreu um erro. Tente novamente mais tarde.");
         }
     };
 
     return (
-        <div className="container mt-5">
-            <h2 className="mb-4">Login</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                    <label className="form-label">Email</label>
-                    <input
-                        type="email"
-                        className="form-control"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
+        <div className="d-flex vh-100 justify-content-center align-items-center bg-light">
+            <div className="container d-flex justify-content-center">
+                <div className="card shadow-lg p-4" style={{ width: "400px", borderRadius: "10px" }}>
+                    <h2 className="text-center mb-4">Login</h2>
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-3">
+                            <label className="form-label">Email</label>
+                            <input
+                                type="email"
+                                className="form-control"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label className="form-label">Senha</label>
+                            <input
+                                type="password"
+                                className="form-control"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <button type="submit" className="btn btn-primary w-100">Entrar</button>
+                    </form>
+                    <div className="text-center mt-3">
+                        <p>Não tem uma conta? <a href="#" onClick={() => navigate("/register")} className="text-primary">Cadastre-se</a></p>
+                    </div>
                 </div>
-                <div className="mb-3">
-                    <label className="form-label">Senha</label>
-                    <input
-                        type="password"
-                        className="form-control"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary">Entrar</button>
-            </form>
+            </div>
         </div>
     );
 }

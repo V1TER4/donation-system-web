@@ -41,24 +41,19 @@ function History() {
     return (
         <div className="d-flex vh-100">
             <div className="sidebar bg-dark text-white p-3 d-flex flex-column" style={{ width: '250px' }}>
-                <h4 className="mb-4">Menu</h4>
-
+                <h4 className="mb-4">{user.name}</h4>
                 <button className="btn btn-outline-light d-flex align-items-center justify-content-start mb-2" onClick={() => navigate("/dashboard")}>
                     <FaTachometerAlt className="me-2" /> Dashboard
                 </button>
-
                 <button className="btn btn-outline-light d-flex align-items-center justify-content-start mb-2" onClick={() => navigate("/donate")}>
                     <FaHandHoldingHeart className="me-2" /> Doação
                 </button>
-
                 <button className="btn btn-outline-light d-flex align-items-center justify-content-start mb-2" onClick={() => navigate("/history")}>
                     <FaHistory className="me-2" /> Histórico
                 </button>
-
                 <button className="btn btn-outline-light d-flex align-items-center justify-content-start" onClick={() => navigate("/favorites")}>
                     <FaStar className="me-2" /> Favoritos
                 </button>
-
                 <button className="btn btn-outline-light d-flex align-items-center justify-content-start mt-auto" onClick={() => {
                     localStorage.removeItem("token");
                     navigate("/login");

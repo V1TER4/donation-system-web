@@ -85,7 +85,7 @@ const DonationForm: React.FC = () => {
     return (
         <div className="d-flex vh-100">
             <div className="sidebar bg-dark text-white p-3 d-flex flex-column" style={{ width: '250px' }}>
-                <h4 className="mb-4">Menu</h4>
+                <h4 className="mb-4">{user.name}</h4>
                 <button className="btn btn-outline-light d-flex align-items-center justify-content-start mb-2" onClick={() => navigate("/dashboard")}>
                     <FaTachometerAlt className="me-2" /> Dashboard
                 </button>

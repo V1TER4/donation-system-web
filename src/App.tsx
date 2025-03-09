@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import Donate from "./pages/Donate";
 import History from "./pages/History";
 import Favorites from "./pages/Favorite";
+import Register from "./pages/Register";
 import { UserProvider } from "./context/UserContext";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
             <Route path="/donate" element={<Donate />} />
             <Route path="/history" element={<History />} />
             <Route path="/favorites" element={<Favorites />} />
+            <Route path="/register" element={<Register />} />
             </Routes>
         </div>
       </Router>
