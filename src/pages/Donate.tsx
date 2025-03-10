@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../utils/auth";
 import { useUser } from "../context/UserContext";
-import { NumericFormat } from "react-number-format";
 import { useNavigate } from "react-router-dom";
 import { FaTachometerAlt, FaHandHoldingHeart, FaHistory, FaStar, FaRegStar, FaSignOutAlt } from "react-icons/fa";
 
@@ -92,7 +91,7 @@ const DonationForm: React.FC = () => {
     return (
         <div className="d-flex vh-100">
             <div className="sidebar bg-dark text-white p-3 d-flex flex-column" style={{ width: '250px' }}>
-                <h4 className="mb-4">{user?.name ?? "Usuário"}</h4> {/* Verifica se o user existe */}
+                <h4 className="mb-4">{user?.name ?? "Usuário"}</h4>
                 <button className="btn btn-outline-light d-flex align-items-center justify-content-start mb-2" onClick={() => navigate("/dashboard")}>
                     <FaTachometerAlt className="me-2" /> Dashboard
                 </button>
@@ -154,18 +153,14 @@ const DonationForm: React.FC = () => {
 
                     <div className="mb-3">
                         <label className="form-label">Valor</label>
-                        <NumericFormat
-                            className="form-control"
-                            value={amount}
-                            onValueChange={(values) => setAmount(values.value)}
-                            thousandSeparator="."
-                            decimalSeparator=","
-                            prefix="R$ "
-                            decimalScale={2}
-                            fixedDecimalScale
-                            allowNegative={false}
-                            required
-                        />
+                        <select className="form-control" value={amount} onChange={(e) => setAmount(e.target.value)} required>
+                            <option value="">Selecione um valor</option>
+                            <option value="5.00">R$ 5,00</option>
+                            <option value="10.00">R$ 10,00</option>
+                            <option value="20.00">R$ 20,00</option>
+                            <option value="50.00">R$ 50,00</option>
+                            <option value="100.00">R$ 100,00</option>
+                        </select>
                     </div>
 
                     <div className="d-flex justify-content-between mt-3">
