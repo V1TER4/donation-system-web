@@ -1,5 +1,4 @@
-// import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -14,14 +13,15 @@ function App() {
     <UserProvider>
       <Router>
         <div className="container mt-4">
-            <Routes>
-            <Route path="/login" element={<Login setIsAuthenticated={() => {}} />} />
+          <Routes>
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="/login" element={<Login setIsAuthenticated={() => { }} />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/donate" element={<Donate />} />
             <Route path="/history" element={<History />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/register" element={<Register />} />
-            </Routes>
+          </Routes>
         </div>
       </Router>
     </UserProvider>
