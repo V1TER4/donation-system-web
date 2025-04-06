@@ -44,8 +44,8 @@ function Login({ setIsAuthenticated }: LoginProps) {
     };
 
     return (
-        <div className="d-flex vh-100 justify-content-center align-items-center bg-light">
-            <div className="container d-flex justify-content-center">
+        <div className="d-flex vh-100 vw-100 justify-content-center align-items-center bg-light">
+            <div className="d-flex justify-content-center">
                 <div className="card shadow-lg p-4" style={{ width: "400px", borderRadius: "10px" }}>
                     <h2 className="text-center mb-4">Login</h2>
                     <form onSubmit={handleSubmit}>
@@ -78,6 +78,7 @@ function Login({ setIsAuthenticated }: LoginProps) {
             </div>
         </div>
     );
+
 }
 
 export default Login;

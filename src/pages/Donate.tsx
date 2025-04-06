@@ -1,14 +1,21 @@
-import React, { useState, useEffect } from "react";
 import { useAuth } from "../utils/auth";
-import { useUser } from "../context/UserContext";
+import Sidebar from "./components/Sidebar";
+import Loading from "./components/Loading";
+import DonationSuccess from "./components/DonationSuccess";
+import DonationFail from "./components/DonationFail";
 import { useNavigate } from "react-router-dom";
-import { FaTachometerAlt, FaHandHoldingHeart, FaHistory, FaStar, FaRegStar, FaSignOutAlt } from "react-icons/fa";
+import { useUser } from "../context/UserContext";
+import React, { useState, useEffect } from "react";
+import { FaStar, FaRegStar } from "react-icons/fa";
 
-// Definição do tipo para Institution
 type Institution = {
     id: number;
     name: string;
 };
+
+type DonationFailMessage = {
+    message: string;
+}
 
 const DonationForm: React.FC = () => {
     const { checkAuth } = useAuth();
@@ -18,11 +25,15 @@ const DonationForm: React.FC = () => {
 
     const { user } = useUser();
     const [amount, setAmount] = useState("");
-    const [institutions, setInstitutions] = useState<Institution[]>([]); // Tipo definido para institutions
-    const [favoriteInstitution, setFavoriteInstitution] = useState<Institution | null>(null); // Tipagem correta
+    const [institutions, setInstitutions] = useState<Institution[]>([]);
+    const [favoriteInstitution, setFavoriteInstitution] = useState<Institution | null>(null);
     const [selectedInstitution, setSelectedInstitution] = useState("");
     const [useFavorite, setUseFavorite] = useState(true);
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [showDonationSuccess, setShowDonationSuccess] = useState(false);
+    const [showDonationFail, setShowDonationFail] = useState(false);
+    const [showDonationFailMessage, setDonationFailMessage] = useState<DonationFailMessage | null>(null);
 
     useEffect(() => {
         const fetchDonationData = async () => {
@@ -42,6 +53,8 @@ const DonationForm: React.FC = () => {
                 }
             } catch (error) {
                 console.error("Error fetching donation data:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -74,43 +87,36 @@ const DonationForm: React.FC = () => {
             const responseData = await response.json();
 
             if (response.ok) {
-                window.location.reload();
+                setShowDonationSuccess(true);
             } else {
                 if (responseData.message?.value?.length) {
-                    alert(responseData.message.value[0]);
+                    setDonationFailMessage({message: responseData.message.value[0]});
+                    setShowDonationFail(true);
                 } else {
-                    alert(responseData.message ?? "Ocorreu um erro desconhecido.");
+                    setDonationFailMessage({message: responseData.message});
+                    setShowDonationFail(true);
                 }
             }
         } catch (error) {
+            setDonationFailMessage({ message: "Ocorreu um erro. Tente novamente mais tarde" });
+            setShowDonationFail(true);
             console.error("Erro ao realizar doação:", error);
-            alert("Ocorreu um erro. Tente novamente mais tarde.");
+        } finally {
+            setLoading(false);
         }
     };
 
+    if (loading) {
+        return (
+            <div className="d-flex vh-100 justify-content-center align-items-center">
+                <Loading />
+            </div>
+        );
+    }
+
     return (
         <div className="d-flex vh-100">
-            <div className="sidebar bg-dark text-white p-3 d-flex flex-column" style={{ width: '250px' }}>
-                <h4 className="mb-4">{user?.name ?? "Usuário"}</h4>
-                <button className="btn btn-outline-light d-flex align-items-center justify-content-start mb-2" onClick={() => navigate("/dashboard")}>
-                    <FaTachometerAlt className="me-2" /> Dashboard
-                </button>
-                <button className="btn btn-outline-light d-flex align-items-center justify-content-start mb-2" onClick={() => navigate("/donate")}>
-                    <FaHandHoldingHeart className="me-2" /> Doação
-                </button>
-                <button className="btn btn-outline-light d-flex align-items-center justify-content-start mb-2" onClick={() => navigate("/history")}>
-                    <FaHistory className="me-2" /> Histórico
-                </button>
-                <button className="btn btn-outline-light d-flex align-items-center justify-content-start" onClick={() => navigate("/favorites")}>
-                    <FaStar className="me-2" /> Favoritos
-                </button>
-                <button className="btn btn-outline-light d-flex align-items-center justify-content-start mt-auto" onClick={() => {
-                    localStorage.removeItem("token");
-                    navigate("/login");
-                }}>
-                    <FaSignOutAlt className="me-2" /> Deslogar
-                </button>
-            </div>
+            <Sidebar />
 
             <div className="content flex-grow-1 p-4">
                 <div className="d-flex justify-content-between align-items-center mb-4">
@@ -126,29 +132,29 @@ const DonationForm: React.FC = () => {
 
                     <div className="mb-3">
                         <label className="form-label">Instituição</label>
-                        {favoriteInstitution && useFavorite ? (
-                            <div className="d-flex align-items-center">
+                            {favoriteInstitution && useFavorite ? (
+                                <div className="d-flex align-items-center">
                                 <input type="hidden" name="institution_id" value={favoriteInstitution.id} />
                                 <input type="text" className="form-control me-2" value={favoriteInstitution.name} readOnly disabled />
                                 <button type="button" className="btn btn-outline-warning" onClick={() => setUseFavorite(false)}>
-                                    <FaStar />
+                                <FaStar />
                                 </button>
-                            </div>
-                        ) : (
-                            <div className="d-flex align-items-center">
+                                </div>
+                            ) : (
+                                <div className="d-flex align-items-center">
                                 <select className="form-control me-2" value={selectedInstitution} onChange={(e) => setSelectedInstitution(e.target.value)} required>
-                                    <option value="">Selecione uma instituição</option>
-                                    {institutions.map((institution) => (
-                                        <option key={institution.id} value={institution.id}>{institution.name}</option>
-                                    ))}
+                                <option value="">Selecione uma instituição</option>
+                                {institutions.map((institution) => (
+                                <option key={institution.id} value={institution.id}>{institution.name}</option>
+                                ))}
                                 </select>
                                 {favoriteInstitution && (
-                                    <button type="button" className="btn btn-outline-secondary" onClick={() => setUseFavorite(true)}>
-                                        <FaRegStar />
-                                    </button>
+                                <button type="button" className="btn btn-outline-secondary" onClick={() => setUseFavorite(true)}>
+                                <FaRegStar />
+                                </button>
                                 )}
-                            </div>
-                        )}
+                                </div>
+                            )}
                     </div>
 
                     <div className="mb-3">
@@ -168,6 +174,24 @@ const DonationForm: React.FC = () => {
                     </div>
                 </form>
             </div>
+
+            {showDonationSuccess && (
+                <DonationSuccess onClose={() => {
+                        setShowDonationSuccess(false);
+                        window.location.reload();
+                    }}
+                    show={showDonationSuccess}
+                />
+            )}
+
+            {showDonationFail && (
+            <DonationFail
+                    onClose={() => {
+                        setShowDonationFail(false); 
+                        window.location.reload();
+                    }}
+                    show={showDonationFail} title={"Falha ao tentar realizar uma doação"} message={showDonationFailMessage?.message || "Ocorreu um erro desconhecido."} />
+            )}
         </div>
     );
 };

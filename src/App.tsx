@@ -12,7 +12,7 @@ function App() {
   return (
     <UserProvider>
       <Router>
-        <div className="container mt-4">
+        <div className="container">
           <Routes>
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<Login setIsAuthenticated={() => { }} />} />

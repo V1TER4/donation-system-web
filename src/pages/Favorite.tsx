@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
 import { useAuth } from "../utils/auth";
-import { useNavigate } from "react-router-dom";
+import Sidebar from "./components/Sidebar";
+import Loading from "./components/Loading";
+import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
-import { FaStar, FaTachometerAlt, FaHandHoldingHeart, FaHistory, FaSignOutAlt } from "react-icons/fa";
 
 // Tipagem dos dados
 type Institution = {
@@ -17,7 +17,6 @@ type Favorite = {
 
 function Favorites() {
     const { checkAuth } = useAuth();
-    const navigate = useNavigate();
     const [favorite, setFavorite] = useState<Favorite | null>(null);
     const [selectedFavorite, setSelectedFavorite] = useState<string>('');
     const [institutions, setInstitutions] = useState<Institution[]>([]);
@@ -137,32 +136,16 @@ function Favorites() {
     };
 
     if (loading) {
-        return <p>Carregando favoritos...</p>;
+        return (
+            <div className="d-flex vh-100 justify-content-center align-items-center">
+                <Loading />
+            </div>
+        );
     }
 
     return (
         <div className="d-flex">
-            <div className="sidebar bg-dark text-white p-3 d-flex flex-column" style={{ width: '250px', minHeight: '100vh' }}>
-                <h4 className="mb-4">{user?.name}</h4>
-                <button className="btn btn-outline-light d-flex align-items-center justify-content-start mb-2" onClick={() => navigate("/dashboard")}>
-                    <FaTachometerAlt className="me-2" /> Dashboard
-                </button>
-                <button className="btn btn-outline-light d-flex align-items-center justify-content-start mb-2" onClick={() => navigate("/donate")}>
-                    <FaHandHoldingHeart className="me-2" /> Doação
-                </button>
-                <button className="btn btn-outline-light d-flex align-items-center justify-content-start mb-2" onClick={() => navigate("/history")}>
-                    <FaHistory className="me-2" /> Histórico
-                </button>
-                <button className="btn btn-outline-light d-flex align-items-center justify-content-start" onClick={() => navigate("/favorites")}>
-                    <FaStar className="me-2" /> Favoritos
-                </button>
-                <button className="btn btn-outline-light d-flex align-items-center justify-content-start mt-auto" onClick={() => {
-                    localStorage.removeItem("token");
-                    navigate("/login");
-                }}>
-                    <FaSignOutAlt className="me-2" /> Deslogar
-                </button>
-            </div>
+            <Sidebar />
             <div className="content flex-grow-1 p-4">
                 <h2>Favoritos</h2>
                 <p>Selecione uma instituição favorita abaixo:</p>

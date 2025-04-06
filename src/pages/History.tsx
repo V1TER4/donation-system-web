@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../utils/auth";
+import Sidebar from "./components/Sidebar";
+import Loading from "./components/Loading";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
-import { FaTachometerAlt, FaHandHoldingHeart, FaHistory, FaStar, FaSignOutAlt } from "react-icons/fa";
 
 interface Donation {
     id: number;
@@ -21,6 +22,7 @@ function History() {
     const navigate = useNavigate();
     const { user } = useUser();
     const [donations, setDonations] = useState<Donation[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         checkAuth();
@@ -47,38 +49,25 @@ function History() {
                 console.error("Erro ao carregar o histórico de doações:", error);
                 alert("Ocorreu um erro. Tente novamente mais tarde.");
             }
+            finally {
+                setLoading(false);
+            }
         };
 
         fetchDonations();
     }, [user]);
-
-    if (!user) {
-        return <div>Carregando...</div>;
+    
+    if (loading || !user) {
+        return (
+            <div className="d-flex vh-100 justify-content-center align-items-center">
+                <Loading />
+            </div>
+        );
     }
 
     return (
         <div className="d-flex vh-100">
-            <div className="sidebar bg-dark text-white p-3 d-flex flex-column" style={{ width: '250px' }}>
-                <h4 className="mb-4">{user.name}</h4>
-                <button className="btn btn-outline-light d-flex align-items-center justify-content-start mb-2" onClick={() => navigate("/dashboard")}>
-                    <FaTachometerAlt className="me-2" /> Dashboard
-                </button>
-                <button className="btn btn-outline-light d-flex align-items-center justify-content-start mb-2" onClick={() => navigate("/donate")}>
-                    <FaHandHoldingHeart className="me-2" /> Doação
-                </button>
-                <button className="btn btn-outline-light d-flex align-items-center justify-content-start mb-2" onClick={() => navigate("/history")}>
-                    <FaHistory className="me-2" /> Histórico
-                </button>
-                <button className="btn btn-outline-light d-flex align-items-center justify-content-start" onClick={() => navigate("/favorites")}>
-                    <FaStar className="me-2" /> Favoritos
-                </button>
-                <button className="btn btn-outline-light d-flex align-items-center justify-content-start mt-auto" onClick={() => {
-                    localStorage.removeItem("token");
-                    navigate("/login");
-                }}>
-                    <FaSignOutAlt className="me-2" /> Deslogar
-                </button>
-            </div>
+            <Sidebar />
 
             <div className="content flex-grow-1 p-4">
                 <div className="d-flex justify-content-between align-items-center mb-4">
