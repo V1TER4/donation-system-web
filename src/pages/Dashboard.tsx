@@ -4,7 +4,6 @@ import { useAuth } from "../utils/auth";
 import Sidebar from "./components/Sidebar";
 import Loading from "./components/Loading";
 import { useUser } from "../context/UserContext";
-import { Chart } from "react-google-charts";
 
 function Dashboard() {
     const { checkAuth } = useAuth();
@@ -21,22 +20,6 @@ function Dashboard() {
             </div>
         );
     }
-
-    const data = [
-        ["Mês", "Doações"],
-        ["Janeiro", 10],
-        ["Fevereiro", 15],
-        ["Março", 20],
-        ["Abril", 25],
-        ["Maio", 30],
-    ];
-
-    const options = {
-        title: "Doações Mensais",
-        hAxis: { title: "Mês", titleTextStyle: { color: "#843" } },
-        vAxis: { minValue: 0 },
-        chartArea: { width: "70%", height: "70%" },
-    };
 
     return (
         <div className="d-flex vh-100 vw-100" style={{ minHeight: "100vh" }}>
@@ -74,16 +57,6 @@ function Dashboard() {
                     </div>
                 </div>
 
-                <div className="mt-5">
-                    <h4>Gráfico de Doações</h4>
-                    <Chart
-                        chartType="AreaChart"
-                        width="100%"
-                        height="180px"
-                        data={data}
-                        options={options}
-                    />
-                </div>
             </div>
         </div>
     );

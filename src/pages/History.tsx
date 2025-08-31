@@ -66,48 +66,53 @@ function History() {
     }
 
     return (
-        <div className="d-flex vh-100">
+        <div className="d-flex vh-100 bg-light">
             <Sidebar />
-
-            <div className="content flex-grow-1 p-4">
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                    <h2 className="text-primary">Histórico de Doações</h2>
-                    <button className="btn btn-light border" onClick={() => navigate(-1)}>← Voltar</button>
+            <div className="flex-grow-1">
+                <div className="px-4 py-3 d-flex justify-content-between align-items-center">
+                    <h4 className="mb-0">Histórico de Doações</h4>
+                    <button className="btn btn-dark btn-sm" onClick={() => navigate(-1)}>← Voltar</button>
                 </div>
 
-                <p className="text-muted">Aqui você pode visualizar todas as suas doações feitas.</p>
+                <div className="p-4">
+                    <div className="card shadow-sm border-0">
+                        <div className="card-body">
+                            <p className="text-muted mb-4">Aqui você pode visualizar todas as suas doações feitas.</p>
 
-                <div className="table-responsive">
-                    <table className="table table-hover w-100">
-                        <thead className="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Usuário</th>
-                                <th>Instituição</th>
-                                <th>Quantia</th>
-                                <th>Data</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {donations.length > 0 ? (
-                                donations.map((donation) => (
-                                    <tr key={donation.id}>
-                                        <td>{donation.id}</td>
-                                        <td>{donation.user.name}</td>
-                                        <td>{donation.financial_institution.name}</td>
-                                        <td>R$ {donation.value.replace('.', ',')}</td>
-                                        <td>{new Date(donation.created_at).toLocaleDateString('pt-BR')}</td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={5} className="text-center text-muted py-3">
-                                        Nenhuma doação encontrada.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
+                            <div className="table-responsive">
+                                <table className="table table-bordered table-hover align-middle mb-0">
+                                    <thead className="table-light">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Usuário</th>
+                                            <th>Instituição</th>
+                                            <th>Quantia</th>
+                                            <th>Data</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {donations.length > 0 ? (
+                                            donations.map((donation) => (
+                                                <tr key={donation.id}>
+                                                    <td>{donation.id}</td>
+                                                    <td>{donation.user.name}</td>
+                                                    <td>{donation.financial_institution.name}</td>
+                                                    <td><span className="badge bg-success">R$ {donation.value.replace('.', ',')}</span></td>
+                                                    <td>{new Date(donation.created_at).toLocaleDateString('pt-BR')}</td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan={5} className="text-center text-muted py-3">
+                                                    Nenhuma doação encontrada.
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
