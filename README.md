@@ -1,51 +1,29 @@
 # Donation System Web
 
-Este projeto é um sistema de doações web. Siga as instruções abaixo para configurar e executar o projeto localmente.
+Frontend web para a plataforma de doações. A aplicação foi iniciada com React e Vite e serve como interface para consumir o backend do projeto `donation-system-api`.
 
-## Pré-requisitos
+## Stack
 
-Antes de começar, certifique-se de ter os seguintes itens instalados:
-- [Node.js](https://nodejs.org/) (versão recomendada: LTS)
-- [npm](https://www.npmjs.com/) (gerenciador de pacotes do Node.js)
-- [Git](https://git-scm.com/) (para clonar o repositório)
+- React
+- TypeScript
+- Vite
+- ESLint
 
-## Instalação
+## Executar
 
-1. **Clone o repositório**
 ```bash
-git clone https://github.com/seu-usuario/donation-system-web.git
-```
-
-2. **Acesse o diretório do projeto**
-```bash
+git clone https://github.com/V1TER4/donation-system-web.git
 cd donation-system-web
-```
-
-3. **Instale as dependências**
-```bash
 npm install
+npm run dev
 ```
 
-## Construção e execução
+Para gerar e visualizar a versão de produção:
 
-4. **Compile o projeto**
 ```bash
 npm run build
+npm run preview
 ```
 
-5. **Inicie o servidor**
-```bash
-npm start
-```
+Configure a URL da API conforme a convenção de variáveis usada pelo Vite antes de conectar o frontend ao backend. Não coloque tokens ou segredos no código enviado ao navegador.
 
-## Contribuição
-
-Se quiser contribuir com melhorias, siga os passos:
-1. Faça um fork do repositório.
-2. Crie uma nova branch para suas alterações.
-3. Faça commit das suas mudanças.
-4. Envie um pull request.
-
-## Licença
-
-Este projeto está licenciado sob a MIT License.
